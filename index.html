@@ -1,62 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Live HTML/CSS/JavaScript editor with instant preview. No server needed.">
-<meta name="keywords" content="html preview, live editor, html tester, code playground">
-<title>HTML Preview — DevKit Tools</title>
-<style>
-:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#c9d1d9;--text2:#8b949e;--accent:#58a6ff;--radius:6px;}
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="description" content="Live HTML/CSS/JS editor with instant preview"><title>HTML Preview — DevKit Tools</title><style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#c9d1d9;--accent:#58a6ff;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;}
-.header a{color:var(--text);text-decoration:none;font-weight:600;font-size:14px;}
-.container{max-width:800px;margin:0 auto;padding:32px 24px;flex:1;width:100%;}
-h1{font-size:28px;font-weight:700;margin-bottom:8px;color:#f0f6fc;}
-.subtitle{color:var(--text2);font-size:14px;margin-bottom:32px;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
-.card h2{font-size:16px;margin-bottom:12px;}
-textarea,input,select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px;color:var(--text);font-size:13px;font-family:monospace;resize:vertical;}
-textarea:focus,input:focus,select:focus{outline:none;border-color:var(--accent);}
-.btn{background:#238636;color:#fff;border:none;border-radius:var(--radius);padding:8px 16px;font-size:13px;cursor:pointer;}
-.btn:hover{background:#2ea043;}
-.btn.secondary{background:var(--surface);border:1px solid var(--border);color:var(--text);}
-.output{margin-top:12px;word-break:break-all;min-height:40px;}
-.footer{text-align:center;padding:24px;color:var(--text2);font-size:12px;border-top:1px solid var(--border);}
-.footer a{color:var(--accent);text-decoration:none;}
-.label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500;}
-</style>
-</head>
-<body>
-<div class="header">
-  <a href="https://devkit-tools.xyz">← DevKit Tools</a>
-  <span style="color:var(--text2);font-size:13px;">HTML Preview</span>
+body{font-family:-apple-system,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;height:100vh;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:16px;}
+.header a{color:var(--text);text-decoration:none;font-size:13px;}
+.header a:hover{color:var(--accent);}
+.header h1{font-size:16px;color:#f0f6fc;}
+.main{display:flex;flex:1;overflow:hidden;}
+.editor{flex:1;display:flex;flex-direction:column;min-width:0;}
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);}
+.tab{padding:8px 16px;font-size:12px;cursor:pointer;color:var(--text);border:none;background:none;border-bottom:2px solid transparent;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.code-area{flex:1;position:relative;}
+textarea.code{position:absolute;top:0;left:0;width:100%;height:100%;background:var(--bg);color:var(--text);border:none;padding:16px;font-family:"SF Mono",Menlo,monospace;font-size:13px;resize:none;tab-size:2;}
+textarea.code:focus{outline:none;}
+.preview{flex:1;border-left:1px solid var(--border);background:#fff;}
+.preview iframe{width:100%;height:100%;border:none;}
+</style></head><body>
+<div class="header"><a href="https://devkit-tools.xyz">← DevKit</a><h1>HTML Preview</h1><button onclick="run()" style="background:#238636;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;font-size:12px;">▶ Run</button></div>
+<div class="main">
+<div class="editor">
+<div class="tabs"><button class="tab active" data-panel="html">HTML</button><button class="tab" data-panel="css">CSS</button><button class="tab" data-panel="js">JS</button></div>
+<div class="code-area"><textarea class="code" id="html-code" style="display:block;"><h1>Hello World</h1>
+<p>Edit the code and click <strong>Run</strong> to preview.</p>
+<button onclick="alert('Clicked!')">Click me</button></textarea>
+<textarea class="code" id="css-code" style="display:none;">h1 { color: #58a6ff; font-family: sans-serif; }
+p { color: #666; }</textarea>
+<textarea class="code" id="js-code" style="display:none;">console.log('JS loaded');</textarea></div>
 </div>
-<div class="container">
-  <h1>HTML Preview</h1>
-  <p class="subtitle">Live HTML/CSS/JavaScript editor with instant preview. No server needed.</p>
-  <div class="card">
-    <h2>Tool</h2>
-    <div id="tool-area">
-      <label class="label">Input</label>
-      <textarea id="input" rows="6" placeholder="Type or paste here..."></textarea>
-      <button class="btn" onclick="process()" style="margin-top:8px;">Convert</button>
-      <label class="label" style="margin-top:12px;">Output</label>
-      <textarea id="output" rows="6" readonly></textarea>
-    </div>
-  </div>
-</div>
-<div class="footer">
-  <a href="https://devkit-tools.xyz/privacy">Privacy</a> ·
-  <a href="https://devkit-tools.xyz/terms">Terms</a> ·
-  © 2026 DevKit Tools
+<div class="preview"><iframe id="preview-frame"></iframe></div>
 </div>
 <script>
-function process() {
-  const v = document.getElementById('input').value;
-  document.getElementById('output').value = v ? 'Processing... (full feature coming soon)' : '';
+let active = 'html';
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  active=t.dataset.panel;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelectorAll('.code').forEach(c=>c.style.display='none');
+  document.getElementById(active+'-code').style.display='block';
+}));
+function run(){
+  const h=document.getElementById('html-code').value;
+  const c=document.getElementById('css-code').value;
+  const j=document.getElementById('js-code').value;
+  const doc=`<!DOCTYPE html><html><head><style>${c}</style></head><body>${h}<script>${j}<\/script></body></html>`;
+  const f=document.getElementById('preview-frame');
+  f.srcdoc=doc;
 }
-</script>
-</body>
-</html>
+run();
+</script></body></html>
