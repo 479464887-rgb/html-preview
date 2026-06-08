@@ -48,6 +48,7 @@ p { color: #666; }</textarea>
 <div class="preview"><iframe id="preview-frame"></iframe></div>
 </div>
 <script>
+'use strict';
 let active = 'html';
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   active=t.dataset.panel;
